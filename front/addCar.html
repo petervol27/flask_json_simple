@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Full-Stack FLASK</title>
+  </head>
+  <body style="text-align: center">
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="addCar.html">Add car</a></li>
+      </ul>
+    </nav>
+    <h1>Garage</h1>
+    <div id="carForm">
+      <form>
+        <h2>Add Car</h2>
+        Number:<input type="text" id="number" name="number" required />
+        Image:<input type="url" id="img" name="img" /> Description:<input
+          type="text"
+          id="description"
+          name="description"
+        />
+        <input type="button" value="Submit" onclick="addCar()" />
+      </form>
+    </div>
+    <script>
+      async function addCar() {
+        const num = number.value;
+        const image = img.value;
+        const desc = description.value;
+        if (num != '') {
+          const carData = {
+            number: num,
+            img: image,
+            description: desc,
+          };
+          try {
+            const response = await axios.post(
+              'http://127.0.0.1:9000/cars/',
+              carData
+            );
+            console.log('Car added:', response.data);
+            window.location.href = 'index.html';
+          } catch (error) {
+            console.error('Error adding car:', error);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

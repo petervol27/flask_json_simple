@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Full-Stack FLASK</title>
+  </head>
+  <body style="text-align: center">
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="addCar.html">Add car</a></li>
+      </ul>
+    </nav>
+    <h1>Garage</h1>
+    <div id="carForm">
+      <form method="POST">
+        <h2>Edit Car</h2>
+        Number:<input type="text" id="number" name="number" required />
+        Image:<input type="url" id="img" name="img" /> Description:<input
+          type="text"
+          id="description"
+          name="description"
+        />
+        <input type="button" value="Submit" onclick="editCar()" />
+      </form>
+    </div>
+    <script>
+      const getParams = window.location.search;
+      const urlParams = new URLSearchParams(getParams);
+      const carParams = urlParams.get('id');
+      const carId = carParams;
+      async function getCar() {
+        try {
+          const response = await axios.get(
+            `http://127.0.0.1:9000/cars/${carId}/`
+          );
+          car = response.data;
+          document.getElementById('description').value = car.description;
+          document.getElementById('img').value = car.img;
+          document.getElementById('number').value = car.number;
+        } catch (error) {
+          console.error('Error getting car:', error);
+        }
+      }
+      getCar();
+
+      async function editCar() {
+        const updatedCar = {
+          number: document.getElementById('number').value,
+          img: document.getElementById('img').value,
+          description: document.getElementById('description').value,
+          id: carId,
+        };
+        const response = await axios.put(
+          `http://127.0.0.1:9000/cars/${carId}/`,
+          updatedCar
+        );
+        console.log(response.data);
+        window.location.href = 'index.html';
+      }
+    </script>
+  </body>
+</html>

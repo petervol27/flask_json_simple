@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      button:hover {
+        cursor: pointer;
+      }
+    </style>
+    <title>Full-Stack FLASK</title>
+  </head>
+  <body style="text-align: center">
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="addCar.html">Add car</a></li>
+      </ul>
+    </nav>
+    <h1>Garage</h1>
+    <div id="carsList"></div>
+    <script>
+      carsList = document.getElementById('carsList');
+      getCars();
+      async function getCars() {
+        const response = await axios.get(`http://127.0.0.1:9000/cars/`);
+        myCars = response.data;
+        console.log(myCars);
+        displayCars(myCars);
+      }
+
+      displayCars = function (cars) {
+        let strHtml = '<div>';
+        for (let i = 0; i < cars.length; i++) {
+          const carHtml = `
+                        <h3>${cars[i].description}</h3>
+                        <p>${cars[i].number}</p>
+                        <img src="${cars[i].img}" style="width:100px">
+                        <button onclick="deleteCar(${cars[i].id})" style="color:red;">Delete</button>
+                        <button style="color:blue;"><a href="./editCar.html?id=${cars[i].id}" style="text-decoration:none;">Edit</a></button>
+                       `;
+          strHtml = strHtml + carHtml;
+        }
+        carsList.innerHTML = strHtml + '</div>';
+      };
+      async function deleteCar(carId) {
+        const carData = { id: carId };
+        try {
+          const response = await axios.delete(`http://127.0.0.1:9000/cars/`, {
+            data: carData,
+          });
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error deleting car:', error);
+        }
+      }
+    </script>
+  </body>
+</html>
